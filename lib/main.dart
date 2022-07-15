@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:lamp_app/color_info.dart';
+import 'package:lamp_app/lamp.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,12 +12,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ColorInfoWrapper(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomePage(),
       ),
-      home: const HomePage(),
     );
   }
 }
@@ -24,17 +29,44 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-        child: SingleChildScrollView(
-          child: Text(
-            loremIpsum,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: Colors.white),
+    return Lamp(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        floatingActionButton: FloatingActionButton(
+          child: const Text('Color'),
+          onPressed: () {
+            final colorInfo = ColorInfo.of(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  titlePadding: const EdgeInsets.all(0),
+                  contentPadding: const EdgeInsets.all(0),
+                  content: SingleChildScrollView(
+                    child: ColorPicker(
+                      pickerColor: colorInfo.color,
+                      onColorChanged: colorInfo.onColorChanged,
+                      portraitOnly: false,
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20.0,
+            horizontal: 10.0,
+          ),
+          child: SingleChildScrollView(
+            child: Text(
+              loremIpsum,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.1),
+                fontSize: 20.0,
+              ),
+            ),
           ),
         ),
       ),
